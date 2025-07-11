@@ -120,7 +120,21 @@ const translations = {
     recentActivity: 'Hoạt động gần đây',
     upcomingSessions: 'Buổi tập sắp tới',
     weeklyGoals: 'Mục tiêu tuần',
-    progressTracking: 'Theo dõi tiến độ'
+    progressTracking: 'Theo dõi tiến độ',
+    
+    // Profile translations
+    fullName: 'Họ và tên',
+    age: 'Tuổi',
+    height: 'Chiều cao',
+    currentWeight: 'Cân nặng hiện tại',
+    bodyFatPercentage: 'Tỷ lệ mỡ cơ thể',
+    
+    // Progress tracking translations
+    weightProgress: 'Tiến độ cân nặng',
+    addWeightEntry: 'Thêm cân nặng',
+    weight: 'Cân nặng',
+    date: 'Ngày',
+    addEntry: 'Thêm'
   },
   en: {
     // Navigation
@@ -234,7 +248,21 @@ const translations = {
     recentActivity: 'Recent Activity',
     upcomingSessions: 'Upcoming Sessions',
     weeklyGoals: 'Weekly Goals',
-    progressTracking: 'Progress Tracking'
+    progressTracking: 'Progress Tracking',
+    
+    // Profile translations
+    fullName: 'Full Name',
+    age: 'Age',
+    height: 'Height',
+    currentWeight: 'Current Weight',
+    bodyFatPercentage: 'Body Fat Percentage',
+    
+    // Progress tracking translations
+    weightProgress: 'Weight Progress',
+    addWeightEntry: 'Add Weight Entry',
+    weight: 'Weight',
+    date: 'Date',
+    addEntry: 'Add Entry'
   }
 };
 

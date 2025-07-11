@@ -101,31 +101,27 @@ const Profile = () => {
                   <CardDescription>Update your personal details</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                      <Label htmlFor="firstName">First Name</Label>
-                      <Input id="firstName" defaultValue="John" />
+                      <Label htmlFor="fullName">{t('fullName')}</Label>
+                      <Input id="fullName" defaultValue="John Doe" className="mt-1" />
                     </div>
                     <div>
-                      <Label htmlFor="lastName">Last Name</Label>
-                      <Input id="lastName" defaultValue="Doe" />
+                      <Label htmlFor="age">{t('age')}</Label>
+                      <Input id="age" type="number" defaultValue="30" className="mt-1" />
                     </div>
-                  </div>
-                  <div>
-                    <Label htmlFor="email">Email</Label>
-                    <Input id="email" type="email" defaultValue="john.doe@email.com" />
-                  </div>
-                  <div>
-                    <Label htmlFor="phone">Phone</Label>
-                    <Input id="phone" defaultValue="+1 (555) 123-4567" />
-                  </div>
-                  <div>
-                    <Label htmlFor="bio">Bio</Label>
-                    <Textarea 
-                      id="bio" 
-                      placeholder="Tell us about yourself and your fitness journey..."
-                      defaultValue="Passionate about fitness and healthy living. Looking to build strength and improve overall wellness."
-                    />
+                    <div>
+                      <Label htmlFor="height">{t('height')}</Label>
+                      <Input id="height" defaultValue="175 cm" className="mt-1" />
+                    </div>
+                    <div>
+                      <Label htmlFor="weight">{t('currentWeight')}</Label>
+                      <Input id="weight" defaultValue="70 kg" className="mt-1" />
+                    </div>
+                    <div>
+                      <Label htmlFor="bodyFat">{t('bodyFatPercentage')}</Label>
+                      <Input id="bodyFat" defaultValue="15%" className="mt-1" />
+                    </div>
                   </div>
                   <Button className="w-full">Save Changes</Button>
                 </CardContent>

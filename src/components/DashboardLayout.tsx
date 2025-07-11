@@ -48,10 +48,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
       <div className={`fixed inset-y-0 left-0 z-50 w-64 bg-card border-r transform transition-transform duration-300 ease-in-out lg:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:static lg:inset-0`}>
         <div className="flex items-center justify-between p-4 border-b">
           <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-gradient-to-r from-primary to-secondary rounded-lg flex items-center justify-center">
-              <span className="text-primary-foreground font-bold text-lg">F</span>
-            </div>
-            <span className="text-2xl font-bold">FITTR</span>
+            <img src="/src/assets/leefit-logo.png" alt="Leefit" className="h-8" />
           </div>
           <Button
             variant="ghost"
