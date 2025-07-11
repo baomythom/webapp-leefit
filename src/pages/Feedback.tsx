@@ -116,7 +116,7 @@ const Feedback = () => {
 
   return (
     <DashboardLayout>
-      <div className="space-y-6">
+      <div>
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
