@@ -40,9 +40,7 @@ const Profile = () => {
     { label: "Age", value: "28 years" },
     { label: "Height", value: "175 cm" },
     { label: "Current Weight", value: "72.1 kg" },
-    { label: "Target Weight", value: "70 kg" },
     { label: "Body Fat", value: "18.2%" },
-    { label: "Muscle Mass", value: "58.9 kg" },
   ];
 
   return (
@@ -57,9 +55,8 @@ const Profile = () => {
         </div>
 
         <Tabs defaultValue="personal" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="personal">Personal Info</TabsTrigger>
-            <TabsTrigger value="goals">Goals & Metrics</TabsTrigger>
             <TabsTrigger value="achievements">Achievements</TabsTrigger>
             <TabsTrigger value="settings">Settings</TabsTrigger>
           </TabsList>
@@ -127,87 +124,95 @@ const Profile = () => {
                 </CardContent>
               </Card>
 
-              <Card>
-                <CardHeader>
-                  <CardTitle>Health Metrics</CardTitle>
-                  <CardDescription>Your current health and fitness metrics</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-2 gap-4">
-                    {healthMetrics.map((metric, index) => (
-                      <div key={index} className="text-center p-3 border rounded-lg">
-                        <p className="text-sm text-muted-foreground">{metric.label}</p>
-                        <p className="text-lg font-semibold">{metric.value}</p>
+              <div className="space-y-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Health Metrics</CardTitle>
+                    <CardDescription>Your current health and fitness metrics</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-2 gap-4">
+                      {healthMetrics.map((metric, index) => (
+                        <div key={index} className="text-center p-3 border rounded-lg">
+                          <p className="text-sm text-muted-foreground">{metric.label}</p>
+                          <p className="text-lg font-semibold">{metric.value}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Training Package</CardTitle>
+                    <CardDescription>Your current training package information</CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="flex items-center justify-between p-3 border rounded-lg">
+                      <div>
+                        <h4 className="font-semibold">Premium Strength Training</h4>
+                        <p className="text-sm text-muted-foreground">Selected Package</p>
                       </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
+                      <Badge variant="default">Active</Badge>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="p-3 border rounded-lg">
+                        <p className="text-sm text-muted-foreground">Milestones</p>
+                        <div className="mt-2 space-y-1">
+                          <div className="flex items-center justify-between text-sm">
+                            <span>Week 4: Strength Assessment</span>
+                            <Badge variant="secondary" className="text-xs">Completed</Badge>
+                          </div>
+                          <div className="flex items-center justify-between text-sm">
+                            <span>Week 8: Body Composition</span>
+                            <Badge variant="outline" className="text-xs">Upcoming</Badge>
+                          </div>
+                          <div className="flex items-center justify-between text-sm">
+                            <span>Week 12: Final Evaluation</span>
+                            <Badge variant="outline" className="text-xs">Pending</Badge>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="p-3 border rounded-lg">
+                        <p className="text-sm text-muted-foreground">Package Validity</p>
+                        <p className="text-lg font-semibold mt-1">March 15, 2025</p>
+                        <p className="text-sm text-green-600">67 days remaining</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Timezone Settings</CardTitle>
+                    <CardDescription>Set your preferred timezone</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div>
+                      <Label htmlFor="timezone">Timezone</Label>
+                      <select 
+                        id="timezone" 
+                        className="w-full mt-1 px-3 py-2 border border-input bg-background rounded-md"
+                        defaultValue="America/New_York"
+                      >
+                        <option value="America/New_York">Eastern Time (UTC-5)</option>
+                        <option value="America/Chicago">Central Time (UTC-6)</option>
+                        <option value="America/Denver">Mountain Time (UTC-7)</option>
+                        <option value="America/Los_Angeles">Pacific Time (UTC-8)</option>
+                        <option value="UTC">UTC (UTC+0)</option>
+                        <option value="Europe/London">London (UTC+0)</option>
+                        <option value="Europe/Paris">Paris (UTC+1)</option>
+                        <option value="Asia/Tokyo">Tokyo (UTC+9)</option>
+                        <option value="Asia/Shanghai">Shanghai (UTC+8)</option>
+                        <option value="Australia/Sydney">Sydney (UTC+11)</option>
+                      </select>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
             </div>
           </TabsContent>
 
-          <TabsContent value="goals" className="space-y-6">
-            {/* Current Goals */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center space-x-2">
-                  <Target className="h-5 w-5" />
-                  <span>Current Fitness Goals</span>
-                </CardTitle>
-                <CardDescription>Track your progress towards your fitness objectives</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-6">
-                  {fitnessGoals.map((goal, index) => (
-                    <div key={index} className="space-y-2">
-                      <div className="flex justify-between items-center">
-                        <h4 className="font-medium">{goal.name}</h4>
-                        <span className="text-sm text-muted-foreground">
-                          {goal.current} / {goal.target}
-                        </span>
-                      </div>
-                      <div className="w-full bg-muted rounded-full h-2">
-                        <div 
-                          className="bg-primary h-2 rounded-full transition-all duration-300"
-                          style={{ width: `${goal.progress}%` }}
-                        />
-                      </div>
-                      <p className="text-xs text-muted-foreground">{goal.progress}% complete</p>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Goal Management */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Manage Goals</CardTitle>
-                <CardDescription>Update or add new fitness goals</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div>
-                  <Label htmlFor="goalType">Goal Type</Label>
-                  <Input id="goalType" placeholder="e.g., Weight Loss, Muscle Gain" />
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="currentValue">Current Value</Label>
-                    <Input id="currentValue" placeholder="e.g., 72kg" />
-                  </div>
-                  <div>
-                    <Label htmlFor="targetValue">Target Value</Label>
-                    <Input id="targetValue" placeholder="e.g., 70kg" />
-                  </div>
-                </div>
-                <div>
-                  <Label htmlFor="timeline">Timeline</Label>
-                  <Input id="timeline" placeholder="e.g., 3 months" />
-                </div>
-                <Button className="w-full">Add Goal</Button>
-              </CardContent>
-            </Card>
-          </TabsContent>
 
           <TabsContent value="achievements" className="space-y-6">
             <Card>

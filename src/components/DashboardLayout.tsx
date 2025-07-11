@@ -10,7 +10,8 @@ import {
   User, 
   Menu,
   X,
-  LogOut
+  LogOut,
+  Bell
 } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { LanguageToggle } from "@/components/LanguageToggle";
@@ -122,14 +123,18 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
               {location.pathname.slice(1) || 'dashboard'}
             </h1>
             
-            <div className="hidden lg:block">
+            <div className="hidden lg:flex lg:items-center lg:space-x-2">
+              <Button variant="ghost" size="sm" className="relative">
+                <Bell className="h-4 w-4" />
+                <span className="absolute -top-1 -right-1 h-3 w-3 bg-red-500 rounded-full"></span>
+              </Button>
               <LanguageToggle />
             </div>
           </div>
         </header>
 
         {/* Page content */}
-        <main className="p-4 lg:p-6">
+        <main className="p-4 lg:p-6 pt-0">
           {children}
         </main>
       </div>

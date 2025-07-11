@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -19,6 +20,7 @@ import DashboardLayout from "@/components/DashboardLayout";
 const Schedule = () => {
   const { t } = useLanguage();
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
+  const [calendarView, setCalendarView] = useState<string>("monthly");
 
   const upcomingSessions = [
     {
@@ -109,54 +111,31 @@ const Schedule = () => {
           </Button>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Calendar */}
-          <Card className="lg:col-span-1">
-            <CardHeader>
+        {/* Calendar */}
+        <Card>
+          <CardHeader>
+            <div className="flex items-center justify-between">
               <CardTitle className="flex items-center space-x-2">
                 <CalendarIcon className="h-5 w-5" />
                 <span>Calendar</span>
               </CardTitle>
-            </CardHeader>
-            <CardContent>
+              <ToggleGroup type="single" value={calendarView} onValueChange={setCalendarView}>
+                <ToggleGroupItem value="weekly" size="sm">Weekly</ToggleGroupItem>
+                <ToggleGroupItem value="monthly" size="sm">Monthly</ToggleGroupItem>
+              </ToggleGroup>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="flex justify-center">
               <Calendar
                 mode="single"
                 selected={selectedDate}
                 onSelect={setSelectedDate}
-                className="rounded-md border w-full"
+                className="rounded-md border"
               />
-            </CardContent>
-          </Card>
-
-          {/* Today's Schedule */}
-          <Card className="lg:col-span-2">
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <Clock className="h-5 w-5" />
-                <span>Today's Schedule</span>
-              </CardTitle>
-              <CardDescription>Your activities for today</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {todaySchedule.map((item, index) => (
-                  <div key={index} className="flex items-center space-x-4 p-3 border rounded-lg">
-                    <div className="text-sm font-medium w-20">{item.time}</div>
-                    <div className="flex-1">
-                      <h4 className="font-semibold">{item.title}</h4>
-                      {item.trainer && (
-                        <p className="text-sm text-muted-foreground">with {item.trainer}</p>
-                      )}
-                    </div>
-                    <Badge variant={item.type === 'session' ? 'default' : 'secondary'}>
-                      {item.duration}
-                    </Badge>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+            </div>
+          </CardContent>
+        </Card>
 
         {/* Upcoming Sessions */}
         <Card>
