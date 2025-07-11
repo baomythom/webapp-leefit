@@ -34,7 +34,7 @@ const translations = {
     expertTrainersDesc: 'Huấn luyện viên được chứng nhận với nhiều năm kinh nghiệm',
     smartScheduling: 'Lịch trình thông minh',
     smartSchedulingDesc: 'Tích hợp Google Calendar để lên lịch liền mạch',
-    progressTracking: 'Theo dõi tiến trình',
+    progressTrackingFeature: 'Theo dõi tiến trình',
     progressTrackingDesc: 'Biểu đồ chi tiết và phân tích để theo dõi cải thiện',
     personalizedPrograms: 'Chương trình cá nhân hóa',
     personalizedProgramsDesc: 'Chương trình tập luyện được thiết kế riêng cho mục tiêu của bạn',
@@ -103,7 +103,24 @@ const translations = {
     rating: 'Đánh giá',
     specialties: 'Chuyên môn',
     viewProfile: 'Xem hồ sơ',
-    bookSession: 'Đặt buổi tập'
+    bookSession: 'Đặt buổi tập',
+    
+    // Dashboard Navigation
+    dashboard: 'Bảng điều khiển',
+    progress: 'Tiến độ',
+    schedule: 'Lịch trình',
+    feedback: 'Phản hồi',
+    profile: 'Hồ sơ',
+    
+    // Dashboard Content
+    totalSessions: 'Tổng buổi tập',
+    goalProgress: 'Tiến độ mục tiêu',
+    activeStreak: 'Chuỗi hoạt động',
+    nextSession: 'Buổi tập tiếp theo',
+    recentActivity: 'Hoạt động gần đây',
+    upcomingSessions: 'Buổi tập sắp tới',
+    weeklyGoals: 'Mục tiêu tuần',
+    progressTracking: 'Theo dõi tiến độ'
   },
   en: {
     // Navigation
@@ -131,7 +148,7 @@ const translations = {
     expertTrainersDesc: 'Certified trainers with years of experience',
     smartScheduling: 'Smart Scheduling',
     smartSchedulingDesc: 'Google Calendar integration for seamless scheduling',
-    progressTracking: 'Progress Tracking',
+    progressTrackingFeature: 'Progress Tracking',
     progressTrackingDesc: 'Detailed charts and analytics to track improvements',
     personalizedPrograms: 'Personalized Programs',
     personalizedProgramsDesc: 'Workout programs tailored to your specific goals',
@@ -200,7 +217,24 @@ const translations = {
     rating: 'Rating',
     specialties: 'Specialties',
     viewProfile: 'View Profile',
-    bookSession: 'Book Session'
+    bookSession: 'Book Session',
+    
+    // Dashboard Navigation
+    dashboard: 'Dashboard',
+    progress: 'Progress',
+    schedule: 'Schedule',
+    feedback: 'Feedback',
+    profile: 'Profile',
+    
+    // Dashboard Content
+    totalSessions: 'Total Sessions',
+    goalProgress: 'Goal Progress',
+    activeStreak: 'Active Streak',
+    nextSession: 'Next Session',
+    recentActivity: 'Recent Activity',
+    upcomingSessions: 'Upcoming Sessions',
+    weeklyGoals: 'Weekly Goals',
+    progressTracking: 'Progress Tracking'
   }
 };
 

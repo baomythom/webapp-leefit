@@ -91,6 +91,9 @@ const Index = () => {
             >
               {t('getStarted')}
             </Button>
+            <Button variant="outline" className="ml-2">
+              <a href="/dashboard">Enter Dashboard</a>
+            </Button>
           </div>
         </div>
       </header>
