@@ -134,7 +134,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
         </header>
 
         {/* Page content */}
-        <main className="p-4 lg:p-6">
+        <main className="px-4 pb-4 lg:px-6 lg:pb-6">
           {children}
         </main>
       </div>
