@@ -1,258 +1,300 @@
 import { useState } from "react";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Calendar } from "@/components/ui/calendar";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { 
   Calendar as CalendarIcon, 
-  Clock, 
-  Video, 
-  MapPin, 
-  Plus,
-  Phone,
-  MessageSquare
+  ChevronLeft, 
+  ChevronRight
 } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import DashboardLayout from "@/components/DashboardLayout";
+import { format, addMonths, subMonths, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isSameDay, startOfWeek, endOfWeek, addWeeks, subWeeks } from "date-fns";
+import { vi } from "date-fns/locale";
 
 const Schedule = () => {
   const { t } = useLanguage();
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
+  const [currentDate, setCurrentDate] = useState<Date>(new Date());
   const [calendarView, setCalendarView] = useState<string>("monthly");
+  const [selectedSlots, setSelectedSlots] = useState<{[key: string]: string[]}>({});
+  const [selectedDayForModal, setSelectedDayForModal] = useState<Date | null>(null);
 
-  const upcomingSessions = [
-    {
-      id: 1,
-      title: "Full Body Strength Training",
-      trainer: "Sarah Johnson",
-      date: "Today",
-      time: "2:00 PM - 3:00 PM",
-      type: "Virtual",
-      status: "confirmed",
-      meetLink: "https://meet.google.com/abc-def-ghi"
-    },
-    {
-      id: 2,
-      title: "Cardio & HIIT Session",
-      trainer: "Mike Chen",
-      date: "Tomorrow",
-      time: "10:00 AM - 11:00 AM",
-      type: "In-person",
-      status: "confirmed",
-      location: "Downtown Gym - Studio A"
-    },
-    {
-      id: 3,
-      title: "Yoga & Flexibility",
-      trainer: "Emma Davis",
-      date: "Friday",
-      time: "6:00 PM - 7:00 PM",
-      type: "Virtual",
-      status: "pending",
-      meetLink: "https://meet.google.com/xyz-uvw-rst"
-    },
-    {
-      id: 4,
-      title: "Nutrition Consultation",
-      trainer: "David Wilson",
-      date: "Saturday",
-      time: "11:00 AM - 12:00 PM",
-      type: "Virtual",
-      status: "confirmed",
-      meetLink: "https://meet.google.com/lmn-opq-rst"
-    }
-  ];
+  const timeSlots = ["Sáng", "Chiều", "Tối"];
 
-  const todaySchedule = [
-    {
-      time: "9:00 AM",
-      title: "Morning Cardio",
-      duration: "30 min",
-      type: "personal"
-    },
-    {
-      time: "2:00 PM",
-      title: "Full Body Strength Training",
-      duration: "60 min",
-      type: "session",
-      trainer: "Sarah Johnson"
-    },
-    {
-      time: "7:00 PM",
-      title: "Evening Stretching",
-      duration: "15 min",
-      type: "personal"
+  const handleDateClick = (date: Date) => {
+    if (calendarView === "monthly") {
+      setSelectedDayForModal(date);
     }
-  ];
+  };
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'confirmed': return 'bg-green-100 text-green-800';
-      case 'pending': return 'bg-yellow-100 text-yellow-800';
-      case 'cancelled': return 'bg-red-100 text-red-800';
-      default: return 'bg-gray-100 text-gray-800';
+  const handleTimeSlotSelect = (date: Date, timeSlot: string) => {
+    const dateKey = format(date, 'yyyy-MM-dd');
+    const currentSlots = selectedSlots[dateKey] || [];
+    
+    if (currentSlots.includes(timeSlot)) {
+      // Remove the time slot
+      setSelectedSlots(prev => ({
+        ...prev,
+        [dateKey]: currentSlots.filter(slot => slot !== timeSlot)
+      }));
+    } else {
+      // Add the time slot
+      setSelectedSlots(prev => ({
+        ...prev,
+        [dateKey]: [...currentSlots, timeSlot]
+      }));
     }
+  };
+
+  const handleModalTimeSelect = (timeSlot: string) => {
+    if (selectedDayForModal) {
+      handleTimeSlotSelect(selectedDayForModal, timeSlot);
+    }
+  };
+
+  const clearAllSelections = () => {
+    setSelectedSlots({});
+  };
+
+  const confirmSchedule = () => {
+    // Handle schedule confirmation
+    console.log("Confirmed schedule:", selectedSlots);
+  };
+
+  const navigateMonth = (direction: 'prev' | 'next') => {
+    setCurrentDate(prev => direction === 'prev' ? subMonths(prev, 1) : addMonths(prev, 1));
+  };
+
+  const navigateWeek = (direction: 'prev' | 'next') => {
+    setCurrentDate(prev => direction === 'prev' ? subWeeks(prev, 1) : addWeeks(prev, 1));
+  };
+
+  const getDaySlots = (date: Date) => {
+    const dateKey = format(date, 'yyyy-MM-dd');
+    return selectedSlots[dateKey] || [];
+  };
+
+  const hasSlots = (date: Date) => {
+    return getDaySlots(date).length > 0;
+  };
+
+  const renderMonthView = () => {
+    const monthStart = startOfMonth(currentDate);
+    const monthEnd = endOfMonth(currentDate);
+    const calendarStart = startOfWeek(monthStart, { weekStartsOn: 1 });
+    const calendarEnd = endOfWeek(monthEnd, { weekStartsOn: 1 });
+    const days = eachDayOfInterval({ start: calendarStart, end: calendarEnd });
+
+    const weekDays = ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'];
+
+    return (
+      <div className="w-full">
+        {/* Month navigation */}
+        <div className="flex items-center justify-between mb-6">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => navigateMonth('prev')}
+            className="p-2"
+          >
+            <ChevronLeft className="h-4 w-4" />
+          </Button>
+          <h2 className="text-xl font-semibold">
+            {format(currentDate, 'MMMM yyyy', { locale: vi })}
+          </h2>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => navigateMonth('next')}
+            className="p-2"
+          >
+            <ChevronRight className="h-4 w-4" />
+          </Button>
+        </div>
+
+        {/* Calendar grid */}
+        <div className="grid grid-cols-7 gap-1">
+          {/* Week day headers */}
+          {weekDays.map(day => (
+            <div key={day} className="p-2 text-center font-medium text-sm bg-muted rounded-lg">
+              {day}
+            </div>
+          ))}
+          
+          {/* Calendar days */}
+          {days.map(day => {
+            const isCurrentMonth = isSameMonth(day, currentDate);
+            const isToday = isSameDay(day, new Date());
+            const daySlots = getDaySlots(day);
+            const hasBookings = daySlots.length > 0;
+
+            return (
+              <Dialog key={day.toString()}>
+                <DialogTrigger asChild>
+                  <div
+                    className={`
+                      p-2 h-16 border rounded-lg cursor-pointer transition-all
+                      ${isCurrentMonth ? 'bg-background hover:bg-accent' : 'bg-muted text-muted-foreground'}
+                      ${isToday ? 'ring-2 ring-primary' : ''}
+                      ${hasBookings ? 'bg-primary/10 border-primary' : ''}
+                    `}
+                    onClick={() => handleDateClick(day)}
+                  >
+                    <div className="text-sm font-medium">
+                      {format(day, 'd')}
+                    </div>
+                    {hasBookings && (
+                      <div className="flex flex-wrap gap-1 mt-1">
+                        {daySlots.map(slot => (
+                          <div key={slot} className="w-2 h-2 bg-primary rounded-full"></div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-md">
+                  <DialogHeader>
+                    <DialogTitle>
+                      Chọn thời gian tập - {format(day, 'dd/MM/yyyy')}
+                    </DialogTitle>
+                  </DialogHeader>
+                  <div className="grid grid-cols-1 gap-3 py-4">
+                    {timeSlots.map(slot => {
+                      const isSelected = getDaySlots(day).includes(slot);
+                      return (
+                        <Button
+                          key={slot}
+                          variant={isSelected ? "default" : "outline"}
+                          className="h-12 text-lg"
+                          onClick={() => {
+                            handleModalTimeSelect(slot);
+                            setSelectedDayForModal(day);
+                          }}
+                        >
+                          {slot}
+                        </Button>
+                      );
+                    })}
+                  </div>
+                </DialogContent>
+              </Dialog>
+            );
+          })}
+        </div>
+      </div>
+    );
+  };
+
+  const renderWeekView = () => {
+    const weekStart = startOfWeek(currentDate, { weekStartsOn: 1 });
+    const weekEnd = endOfWeek(currentDate, { weekStartsOn: 1 });
+    const days = eachDayOfInterval({ start: weekStart, end: weekEnd });
+
+    return (
+      <div className="w-full">
+        {/* Week navigation */}
+        <div className="flex items-center justify-between mb-6">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => navigateWeek('prev')}
+            className="p-2"
+          >
+            <ChevronLeft className="h-4 w-4" />
+          </Button>
+          <h2 className="text-xl font-semibold">
+            {format(weekStart, 'dd/MM', { locale: vi })} - {format(weekEnd, 'dd/MM/yyyy', { locale: vi })}
+          </h2>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => navigateWeek('next')}
+            className="p-2"
+          >
+            <ChevronRight className="h-4 w-4" />
+          </Button>
+        </div>
+
+        {/* Week grid */}
+        <div className="grid grid-cols-7 gap-4">
+          {days.map(day => {
+            const isToday = isSameDay(day, new Date());
+            const daySlots = getDaySlots(day);
+
+            return (
+              <div key={day.toString()} className="flex flex-col">
+                {/* Day header */}
+                <div className={`text-center p-2 rounded-lg mb-2 ${isToday ? 'bg-primary text-primary-foreground' : 'bg-muted'}`}>
+                  <div className="text-xs font-medium">
+                    {format(day, 'EEE', { locale: vi })}
+                  </div>
+                  <div className="text-lg font-bold">
+                    {format(day, 'd')}
+                  </div>
+                </div>
+
+                {/* Time slots */}
+                <div className="space-y-2 flex-1">
+                  {timeSlots.map(slot => {
+                    const isSelected = daySlots.includes(slot);
+                    return (
+                      <Button
+                        key={slot}
+                        variant={isSelected ? "default" : "outline"}
+                        className="w-full h-16 text-sm"
+                        onClick={() => handleTimeSlotSelect(day, slot)}
+                      >
+                        {slot}
+                      </Button>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
   };
 
   return (
     <DashboardLayout>
-      <div>
+      <div className="space-y-6">
         {/* Header */}
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold">{t('schedule')}</h1>
-            <p className="text-muted-foreground">Manage your training sessions and appointments</p>
-          </div>
-          <Button>
-            <Plus className="h-4 w-4 mr-2" />
-            Book Session
-          </Button>
+        <div>
+          <h1 className="text-2xl font-bold">Lịch tập</h1>
+          <p className="text-muted-foreground">Lập kế hoạch tập luyện của bạn</p>
         </div>
 
         {/* Calendar */}
-        <Card>
+        <Card className="w-full">
           <CardHeader>
             <div className="flex items-center justify-between">
               <CardTitle className="flex items-center space-x-2">
                 <CalendarIcon className="h-5 w-5" />
-                <span>Calendar</span>
+                <span>Lịch tập</span>
               </CardTitle>
               <ToggleGroup type="single" value={calendarView} onValueChange={setCalendarView}>
-                <ToggleGroupItem value="weekly" size="sm">Weekly</ToggleGroupItem>
-                <ToggleGroupItem value="monthly" size="sm">Monthly</ToggleGroupItem>
+                <ToggleGroupItem value="weekly" size="sm">Tuần</ToggleGroupItem>
+                <ToggleGroupItem value="monthly" size="sm">Tháng</ToggleGroupItem>
               </ToggleGroup>
             </div>
           </CardHeader>
-          <CardContent>
-            <div className="flex justify-center">
-              <Calendar
-                mode="single"
-                selected={selectedDate}
-                onSelect={setSelectedDate}
-                className="rounded-md border"
-              />
-            </div>
+          <CardContent className="p-6">
+            {calendarView === "monthly" ? renderMonthView() : renderWeekView()}
           </CardContent>
         </Card>
 
-        {/* Upcoming Sessions */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Upcoming Sessions</CardTitle>
-            <CardDescription>Your scheduled training sessions with trainers</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {upcomingSessions.map((session) => (
-                <div key={session.id} className="border rounded-lg p-4">
-                  <div className="flex items-start justify-between mb-3">
-                    <div className="flex-1">
-                      <h3 className="font-semibold text-lg">{session.title}</h3>
-                      <div className="flex items-center space-x-4 mt-2 text-sm text-muted-foreground">
-                        <span className="flex items-center">
-                          <CalendarIcon className="h-4 w-4 mr-1" />
-                          {session.date}
-                        </span>
-                        <span className="flex items-center">
-                          <Clock className="h-4 w-4 mr-1" />
-                          {session.time}
-                        </span>
-                        {session.type === 'Virtual' ? (
-                          <span className="flex items-center">
-                            <Video className="h-4 w-4 mr-1" />
-                            Virtual
-                          </span>
-                        ) : (
-                          <span className="flex items-center">
-                            <MapPin className="h-4 w-4 mr-1" />
-                            In-person
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                    <Badge className={getStatusColor(session.status)}>
-                      {session.status}
-                    </Badge>
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-3">
-                      <Avatar>
-                        <AvatarImage src="/placeholder.svg" />
-                        <AvatarFallback>{session.trainer.split(' ').map(n => n[0]).join('')}</AvatarFallback>
-                      </Avatar>
-                      <div>
-                        <p className="font-medium">{session.trainer}</p>
-                        {session.location && (
-                          <p className="text-sm text-muted-foreground">{session.location}</p>
-                        )}
-                      </div>
-                    </div>
-
-                    <div className="flex items-center space-x-2">
-                      <Button variant="outline" size="sm">
-                        <MessageSquare className="h-4 w-4 mr-1" />
-                        Message
-                      </Button>
-                      {session.type === 'Virtual' && session.meetLink && (
-                        <Button size="sm">
-                          <Video className="h-4 w-4 mr-1" />
-                          Join Meeting
-                        </Button>
-                      )}
-                      {session.type === 'In-person' && (
-                        <Button size="sm">
-                          <Phone className="h-4 w-4 mr-1" />
-                          Call Trainer
-                        </Button>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Quick Actions */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Card className="cursor-pointer hover:shadow-md transition-shadow">
-            <CardContent className="flex items-center space-x-4 p-6">
-              <div className="p-3 bg-blue-100 rounded-full">
-                <Plus className="h-6 w-6 text-blue-600" />
-              </div>
-              <div>
-                <h3 className="font-semibold">Book New Session</h3>
-                <p className="text-sm text-muted-foreground">Schedule with a trainer</p>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="cursor-pointer hover:shadow-md transition-shadow">
-            <CardContent className="flex items-center space-x-4 p-6">
-              <div className="p-3 bg-green-100 rounded-full">
-                <CalendarIcon className="h-6 w-6 text-green-600" />
-              </div>
-              <div>
-                <h3 className="font-semibold">Reschedule Session</h3>
-                <p className="text-sm text-muted-foreground">Change existing booking</p>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="cursor-pointer hover:shadow-md transition-shadow">
-            <CardContent className="flex items-center space-x-4 p-6">
-              <div className="p-3 bg-orange-100 rounded-full">
-                <Video className="h-6 w-6 text-orange-600" />
-              </div>
-              <div>
-                <h3 className="font-semibold">Virtual Training</h3>
-                <p className="text-sm text-muted-foreground">Join online session</p>
-              </div>
-            </CardContent>
-          </Card>
+        {/* Action buttons */}
+        <div className="flex gap-4 justify-center">
+          <Button onClick={confirmSchedule} size="lg" className="px-8">
+            Xác nhận lịch tập
+          </Button>
+          <Button onClick={clearAllSelections} variant="outline" size="lg" className="px-8">
+            Hủy bỏ
+          </Button>
         </div>
       </div>
     </DashboardLayout>
