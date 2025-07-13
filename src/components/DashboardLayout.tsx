@@ -38,7 +38,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   return (
     <div className="min-h-screen bg-background">
       {/* Mobile sidebar overlay */}
-      {sidebarOpen && (
+      { sidebarOpen && (
         <div 
           className="fixed inset-0 z-40 bg-black/50 lg:hidden"
           onClick={() => setSidebarOpen(false)}
@@ -48,6 +48,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
       {/* Sidebar */}
       <div className={`fixed inset-y-0 left-0 z-50 w-64 bg-card border-r transform transition-transform duration-300 ease-in-out
         ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0`}>
+        <div className="flex items-center justify-between p-4 border-b">
           <div className="flex items-center space-x-2">
             <img src="/src/assets/leefit-logo.png" alt="Leefit" className="h-8" />
           </div>
@@ -104,9 +105,10 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
           </div>
         </div>
       </div>
+      
 
       {/* Main content */}
-      <div className="lg:ml-64 mt-0 pt-0">
+      <main className="lg:ml-64 mt-0 pt-0">
         {/* Top bar */}
         <header className="bg-card border-b px-4 py-3 lg:px-6">
           <div className="flex items-center justify-between">
@@ -134,10 +136,10 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
         </header>
 
         {/* Page content */}
-        <main className="px-4 pb-4 lg:px-6 lg:pb-6">
+        <div className="p-4 lg:p-6 pt-0">
           {children}
-        </main>
-      </div>
+        </div>
+      </main>
     </div>
   );
 };
